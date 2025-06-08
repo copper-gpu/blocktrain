@@ -21,7 +21,11 @@ python scripts/eval.py path/to/model.zip
 
 On Windows you can alternatively run the provided `quickstart_win.bat`
 script to automatically set up the virtual environment and install all
-dependencies.
+dependencies. Make sure to run it from a `cmd.exe` prompt (or via
+`cmd /k quickstart_win.bat`) so that the virtual environment remains
+active. If you invoke it from PowerShell, activate the environment
+afterwards with `./.env/Scripts/activate` before running the training
+command.
 
 Run the training script as a module (with `-m`) so that package imports
 resolve correctly.
