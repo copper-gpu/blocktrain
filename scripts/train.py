@@ -4,7 +4,6 @@ Train PPO on the custom Tetris environment for 150 000 steps.
 > python -m scripts.train
 """
 from pathlib import Path
-import sys; sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import datetime as _dt
 

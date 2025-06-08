@@ -10,5 +10,8 @@ python -m venv .env
 .env\Scripts\activate
 pip install -r requirements.txt
 pytest
-python scripts/train.py
+python -m scripts.train
 ```
+
+Run the training script as a module (with `-m`) so that package imports
+resolve correctly.
