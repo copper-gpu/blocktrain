@@ -19,6 +19,10 @@ python -m scripts.train
 python scripts/eval.py path/to/model.zip
 ```
 
+On Windows you can alternatively run the provided `quickstart_win.bat`
+script to automatically set up the virtual environment and install all
+dependencies.
+
 Run the training script as a module (with `-m`) so that package imports
 resolve correctly.
 
