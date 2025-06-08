@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 from typing import Tuple
+import time
 
 import pygame
 import numpy as np
@@ -30,6 +31,7 @@ CELL = 24                    # square size in pixels
 GRID_COLOR = (40, 40, 40)
 FILLED_COLOR = (0, 200, 255)
 BG_COLOR = (18, 18, 18)
+TEXT_COLOR = (250, 250, 250)
 FPS = 30
 
 
@@ -43,6 +45,20 @@ def draw_board(screen: pygame.Surface, board: np.ndarray) -> None:
                 pygame.draw.rect(screen, FILLED_COLOR, rect.inflate(-2, -2))
 
 
+def draw_info(
+    screen: pygame.Surface,
+    font: pygame.font.Font,
+    lines: int,
+    elapsed: float,
+) -> None:
+    """Render lines cleared and running time at the top-left corner."""
+
+    line_surf = font.render(f"Lines: {lines}", True, TEXT_COLOR)
+    time_surf = font.render(f"Time: {elapsed:.1f}s", True, TEXT_COLOR)
+    screen.blit(line_surf, (5, 5))
+    screen.blit(time_surf, (5, 5 + line_surf.get_height()))
+
+
 def play(model_path: Path | None = None) -> None:
     env = TetrisEnv()
     model = PPO.load(model_path) if (model_path and PPO) else None
@@ -53,8 +69,11 @@ def play(model_path: Path | None = None) -> None:
     )
     pygame.display.set_caption("Tetris RL Viewer")
     clock = pygame.time.Clock()
+    font = pygame.font.SysFont(None, 24)
+    start_time = time.time()
 
-    obs, _ = env.reset()
+    obs, info = env.reset()
+    lines = info["lines_cleared"]
     running = True
     while running:
         # ----- handle events ---------------------------------------------
@@ -70,13 +89,17 @@ def play(model_path: Path | None = None) -> None:
         else:
             action = env.action_space.sample()
 
-        obs, _, terminated, _, _ = env.step(action)
+        obs, _, terminated, _, info = env.step(action)
+        lines = info["lines_cleared"]
         if terminated:
-            obs, _ = env.reset()
+            obs, info = env.reset()
+            lines = info["lines_cleared"]
 
         # ----- render ----------------------------------------------------
         surface.fill(BG_COLOR)
         draw_board(surface, obs["board"])
+        elapsed = time.time() - start_time
+        draw_info(surface, font, lines, elapsed)
         pygame.display.flip()
         clock.tick(FPS)
 
