@@ -12,3 +12,7 @@ pip install -r requirements.txt
 pytest
 python scripts/train.py
 ```
+
+## License
+
+This project is released under the [MIT License](LICENSE).
