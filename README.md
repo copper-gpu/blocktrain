@@ -12,7 +12,7 @@ python -m venv .env
 # POSIX
 source .env/bin/activate
 pip install -r requirements.txt
-# requirements include tensorboard for training logs
+# requirements include stable-baselines3 extras and tensorboard for training logs
 pytest
 # train an agent
 python -m scripts.train
