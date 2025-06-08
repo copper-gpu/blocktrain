@@ -6,6 +6,17 @@ with PPO & Stable-Baselines3.
 
 ```
 # quickstart
+codex/remove-sys.path-import-in-train.py
+python -m venv .env
+.env\Scripts\activate
+pip install -r requirements.txt
+pytest
+python -m scripts.train
+```
+
+Run the training script as a module (with `-m`) so that package imports
+resolve correctly.
+
 codex/update-readme.md-with-setup-instructions
 python -m venv .env
 # Windows
@@ -36,4 +47,5 @@ python scripts/train.py
 ## License
 
 This project is released under the [MIT License](LICENSE).
+main
 main
