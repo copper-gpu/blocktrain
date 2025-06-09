@@ -15,11 +15,12 @@ pip install -r requirements.txt
 # requirements include stable-baselines3 extras and tensorboard for training logs
 pytest
 # train an agent
-python -m scripts.train --timesteps 200000 --line-reward 2.0
+# train an agent
+python scripts/train.py --timesteps 200000 --line-reward 2.0
 # evaluate a saved model
-python -m scripts.eval --model path/to/model.zip
-# or use the management CLI
-tetris-trainer train
+python scripts/eval.py --model path/to/model.zip
+# or use the management script
+python scripts/manage.py train
 ```
 
 On Windows you can alternatively run the provided `quickstart_win.bat`
@@ -30,50 +31,43 @@ active. If you invoke it from PowerShell, activate the environment
 afterwards with `./.env/Scripts/activate` before running the training
 command.
 
-Run the training script as a module (with `-m`) so that package imports
-resolve correctly. The same applies to the evaluation and viewer
-scripts:
+Run the evaluation or viewer scripts directly:
 
 ```bash
-python -m scripts.eval --model path/to/model.zip
-python -m viewer.live_view --model path/to/model.zip
+python scripts/eval.py --model path/to/model.zip
+python viewer/live_view.py --model path/to/model.zip
 ```
 
-## Management CLI
+## Management script
 
-Common tasks can also be run through a simple command line interface. When the
-project is installed (e.g. via `pip install -e .`), the `tetris-trainer` command
-provides direct access to these utilities. Running `tetris-trainer` without any
-arguments will show an interactive menu of available actions:
+Common tasks can also be run through a simple command line interface. The
+`scripts/manage.py` helper provides an interactive menu when run without
+arguments:
 
 ```bash
-tetris-trainer
+python scripts/manage.py
 ```
 
-You can also call the subcommands directly:
+Subcommands can be called directly:
 
 ```bash
 # create a virtual environment and install requirements
-tetris-trainer setup
+python scripts/manage.py setup
 
 # start a new training run
-tetris-trainer train --timesteps 200000 --line-reward 2.0
+python scripts/manage.py train --timesteps 200000 --line-reward 2.0
 
 # resume training from an existing model
-tetris-trainer resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000 --line-reward 2.0
+python scripts/manage.py resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000 --line-reward 2.0
 
 # launch TensorBoard to monitor progress
-tetris-trainer tensorboard
+python scripts/manage.py tensorboard
 ```
 
-Both the training script and CLI expose common PPO parameters such as
-`--learning-rate`, `--gamma` and a custom `--line-reward` that controls how
-valuable clearing a line is to the agent. Adjust these flags to experiment with
-different behaviours.
-
-When using the `-m` flag, give the module name with dots rather than a
-filesystem path. For instance run `python -m viewer.live_view`, not
-`python -m ./viewer/live_view`.
+Both the training script and management helper expose common PPO parameters
+such as `--learning-rate`, `--gamma` and a custom `--line-reward` that controls
+how valuable clearing a line is to the agent. Adjust these flags to experiment
+with different behaviours.
 
 ## License
 

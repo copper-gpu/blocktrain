@@ -32,4 +32,4 @@ pytest -q
 
 ECHO.
 ECHO Setup complete. Train an agent with:
-ECHO     python -m scripts.train
+ECHO     python scripts\train.py

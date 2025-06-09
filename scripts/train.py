@@ -1,9 +1,16 @@
 """
 Train PPO on the custom Tetris environment for 150 000 steps.
 
-> python -m scripts.train
+Example:
+
+    python scripts/train.py --timesteps 200000 --line-reward 2.0
 """
 from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 import argparse
 import datetime as _dt
