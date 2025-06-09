@@ -17,7 +17,7 @@ pytest
 # train an agent
 python -m scripts.train
 # evaluate a saved model
-python scripts/eval.py path/to/model.zip
+python -m scripts.eval --model path/to/model.zip
 ```
 
 On Windows you can alternatively run the provided `quickstart_win.bat`
@@ -29,12 +29,12 @@ afterwards with `./.env/Scripts/activate` before running the training
 command.
 
 Run the training script as a module (with `-m`) so that package imports
-resolve correctly.
-
-To watch a game in real time, launch the Pygame viewer:
+resolve correctly. The same applies to the evaluation and viewer
+scripts:
 
 ```bash
-python viewer/live_view.py --model path/to/model.zip
+python -m scripts.eval --model path/to/model.zip
+python -m viewer.live_view --model path/to/model.zip
 ```
 
 ## License
