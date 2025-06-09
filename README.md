@@ -37,6 +37,10 @@ python -m scripts.eval --model path/to/model.zip
 python -m viewer.live_view --model path/to/model.zip
 ```
 
+When using the `-m` flag, give the module name with dots rather than a
+filesystem path. For instance run `python -m viewer.live_view`, not
+`python -m ./viewer/live_view`.
+
 ## License
 
 This project is released under the [MIT License](LICENSE).
