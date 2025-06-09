@@ -3,7 +3,7 @@ Train PPO on the custom Tetris environment for 150 000 steps.
 
 Example:
 
-    python scripts/train.py --timesteps 200000 --line-reward 2.0
+    python scripts/train.py --timesteps 200000 --line-reward 2.0 --tetris-bonus 20
 """
 from pathlib import Path
 import sys
@@ -28,11 +28,12 @@ def main() -> None:
     parser.add_argument("--timesteps", type=int, default=150_000)
     parser.add_argument("--learning-rate", type=float, default=3e-4)
     parser.add_argument("--gamma", type=float, default=0.99)
-    parser.add_argument("--line-reward", type=float, default=1.0)
+    parser.add_argument("--line-reward", type=float, default=2.0)
+    parser.add_argument("--tetris-bonus", type=float, default=20.0)
     args = parser.parse_args()
 
     # 1️⃣ create env
-    env = TetrisEnv(line_reward=args.line_reward)
+    env = TetrisEnv(line_reward=args.line_reward, tetris_bonus=args.tetris_bonus)
 
     # 2️⃣ logging dir
     ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
