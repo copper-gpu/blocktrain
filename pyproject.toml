@@ -7,3 +7,6 @@ build-backend = "setuptools.build_meta"
 name = "tetris-trainer"
 version = "0.1.0"
 requires-python = ">=3.10"
+
+[project.scripts]
+tetris-trainer = "scripts.manage:main"

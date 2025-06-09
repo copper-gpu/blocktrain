@@ -60,17 +60,52 @@ def tensorboard(_: argparse.Namespace) -> None:
     subprocess.run(["tensorboard", "--logdir", str(LOG_ROOT)], check=True)
 
 
+# map command names to handler and description
 COMMANDS = {
-    "setup": setup_env,
-    "train": train,
-    "resume": resume,
-    "tensorboard": tensorboard,
+    "setup": (setup_env, "Prepare environment"),
+    "train": (train, "Start a new training run"),
+    "resume": (resume, "Resume training from a model"),
+    "tensorboard": (tensorboard, "Launch TensorBoard"),
 }
+
+
+def interactive_menu() -> None:
+    """Present a simple numbered menu for common tasks."""
+    options = list(COMMANDS.items())
+    print("Tetris Trainer – choose an option:")
+    for i, (_, (_, desc)) in enumerate(options, start=1):
+        print(f"{i}. {desc}")
+    print(f"{len(options) + 1}. Exit")
+
+    choice = input("Enter number: ").strip()
+    if not choice.isdigit():
+        print("Invalid selection")
+        return
+
+    idx = int(choice) - 1
+    if idx == len(options):
+        return
+    if not (0 <= idx < len(options)):
+        print("Invalid selection")
+        return
+
+    cmd, (func, _) = options[idx]
+    if cmd == "train":
+        ts = input("Total timesteps [150000]: ").strip()
+        timesteps = int(ts) if ts else 150_000
+        func(argparse.Namespace(timesteps=timesteps))
+    elif cmd == "resume":
+        model = input("Model path: ").strip()
+        ts = input("Total timesteps [50000]: ").strip()
+        timesteps = int(ts) if ts else 50_000
+        func(argparse.Namespace(model=Path(model), timesteps=timesteps))
+    else:
+        func(argparse.Namespace())
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Tetris Trainer management CLI")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    subparsers = parser.add_subparsers(dest="command", required=False)
 
     setup_parser = subparsers.add_parser("setup", help="Prepare environment")
     setup_parser.set_defaults(func=setup_env)
@@ -88,7 +123,10 @@ def main() -> None:
     tb_parser.set_defaults(func=tensorboard)
 
     args = parser.parse_args()
-    args.func(args)
+    if args.command is None:
+        interactive_menu()
+    else:
+        args.func(args)
 
 
 if __name__ == "__main__":
