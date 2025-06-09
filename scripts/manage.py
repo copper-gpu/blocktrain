@@ -35,7 +35,10 @@ def setup_env(_: argparse.Namespace) -> None:
 
 def train(args: argparse.Namespace) -> None:
     """Train a new PPO agent."""
-    env = TetrisEnv(line_reward=args.line_reward)
+    env = TetrisEnv(
+        line_reward=args.line_reward,
+        tetris_bonus=args.tetris_bonus,
+    )
     ts = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
     log_dir = LOG_ROOT / ts
     model = PPO(
@@ -54,7 +57,10 @@ def train(args: argparse.Namespace) -> None:
 
 def resume(args: argparse.Namespace) -> None:
     """Resume training from a saved model."""
-    env = TetrisEnv(line_reward=args.line_reward)
+    env = TetrisEnv(
+        line_reward=args.line_reward,
+        tetris_bonus=args.tetris_bonus,
+    )
     model = PPO.load(
         args.model,
         env=env,
@@ -104,17 +110,20 @@ def interactive_menu() -> None:
         ts = input("Total timesteps [150000]: ").strip()
         lr_in = input("Learning rate [0.0003]: ").strip()
         g_in = input("Gamma [0.99]: ").strip()
-        lrw_in = input("Line reward [1.0]: ").strip()
+        lrw_in = input("Line reward [2.0]: ").strip()
+        tetris_in = input("Tetris bonus [20.0]: ").strip()
         timesteps = int(ts) if ts else 150_000
         lr = float(lr_in) if lr_in else 3e-4
         gamma = float(g_in) if g_in else 0.99
-        line_reward = float(lrw_in) if lrw_in else 1.0
+        line_reward = float(lrw_in) if lrw_in else 2.0
+        tetris_bonus = float(tetris_in) if tetris_in else 20.0
         func(
             argparse.Namespace(
                 timesteps=timesteps,
                 learning_rate=lr,
                 gamma=gamma,
                 line_reward=line_reward,
+                tetris_bonus=tetris_bonus,
             )
         )
     elif cmd == "resume":
@@ -122,11 +131,13 @@ def interactive_menu() -> None:
         ts = input("Total timesteps [50000]: ").strip()
         lr_in = input("Learning rate [0.0003]: ").strip()
         g_in = input("Gamma [0.99]: ").strip()
-        lrw_in = input("Line reward [1.0]: ").strip()
+        lrw_in = input("Line reward [2.0]: ").strip()
+        tetris_in = input("Tetris bonus [20.0]: ").strip()
         timesteps = int(ts) if ts else 50_000
         lr = float(lr_in) if lr_in else 3e-4
         gamma = float(g_in) if g_in else 0.99
-        line_reward = float(lrw_in) if lrw_in else 1.0
+        line_reward = float(lrw_in) if lrw_in else 2.0
+        tetris_bonus = float(tetris_in) if tetris_in else 20.0
         func(
             argparse.Namespace(
                 model=Path(model),
@@ -134,6 +145,7 @@ def interactive_menu() -> None:
                 learning_rate=lr,
                 gamma=gamma,
                 line_reward=line_reward,
+                tetris_bonus=tetris_bonus,
             )
         )
     else:
@@ -151,7 +163,8 @@ def main() -> None:
     train_parser.add_argument("--timesteps", type=int, default=150_000)
     train_parser.add_argument("--learning-rate", type=float, default=3e-4)
     train_parser.add_argument("--gamma", type=float, default=0.99)
-    train_parser.add_argument("--line-reward", type=float, default=1.0)
+    train_parser.add_argument("--line-reward", type=float, default=2.0)
+    train_parser.add_argument("--tetris-bonus", type=float, default=20.0)
     train_parser.set_defaults(func=train)
 
     resume_parser = subparsers.add_parser("resume", help="Resume training from a model")
@@ -159,7 +172,8 @@ def main() -> None:
     resume_parser.add_argument("--timesteps", type=int, default=50_000)
     resume_parser.add_argument("--learning-rate", type=float, default=3e-4)
     resume_parser.add_argument("--gamma", type=float, default=0.99)
-    resume_parser.add_argument("--line-reward", type=float, default=1.0)
+    resume_parser.add_argument("--line-reward", type=float, default=2.0)
+    resume_parser.add_argument("--tetris-bonus", type=float, default=20.0)
     resume_parser.set_defaults(func=resume)
 
     tb_parser = subparsers.add_parser("tensorboard", help="Launch TensorBoard")

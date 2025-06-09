@@ -29,7 +29,12 @@ Action = int
 class TetrisEnv(gym.Env):
     metadata = {"render_modes": []}
 
-    def __init__(self, seed: int | None = None, line_reward: float = 1.0):
+    def __init__(
+        self,
+        seed: int | None = None,
+        line_reward: float = 1.0,
+        tetris_bonus: float = 20.0,
+    ):
         super().__init__()
         self.observation_space = spaces.Dict(
             {
@@ -46,6 +51,7 @@ class TetrisEnv(gym.Env):
 
         self._rng = np.random.default_rng(seed)
         self.line_reward = float(line_reward)
+        self.tetris_bonus = float(tetris_bonus)
         self.board = np.zeros((BOARD_HEIGHT, BOARD_WIDTH), dtype=np.int8)
         self.current_id = 0
         self.piece = PIECES[0]
@@ -82,7 +88,7 @@ class TetrisEnv(gym.Env):
             self._lines_total += lines
             reward = float(lines) * self.line_reward
             if lines == 4:
-                reward *= 10
+                reward *= self.tetris_bonus
             reward -= float(holes)
             terminated = not self._spawn_new_piece()
         else:

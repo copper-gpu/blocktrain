@@ -16,7 +16,7 @@ pip install -r requirements.txt
 pytest
 # train an agent
 # train an agent
-python scripts/train.py --timesteps 200000 --line-reward 2.0
+python scripts/train.py --timesteps 200000 --line-reward 2.0 --tetris-bonus 20
 # evaluate a saved model
 python scripts/eval.py --model path/to/model.zip
 # or use the management script
@@ -55,19 +55,19 @@ Subcommands can be called directly:
 python scripts/manage.py setup
 
 # start a new training run
-python scripts/manage.py train --timesteps 200000 --line-reward 2.0
+python scripts/manage.py train --timesteps 200000 --line-reward 2.0 --tetris-bonus 20
 
 # resume training from an existing model
-python scripts/manage.py resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000 --line-reward 2.0
+python scripts/manage.py resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000 --line-reward 2.0 --tetris-bonus 20
 
 # launch TensorBoard to monitor progress
 python scripts/manage.py tensorboard
 ```
 
 Both the training script and management helper expose common PPO parameters
-such as `--learning-rate`, `--gamma` and a custom `--line-reward` that controls
-how valuable clearing a line is to the agent. Adjust these flags to experiment
-with different behaviours.
+such as `--learning-rate`, `--gamma`, `--line-reward` and the optional
+`--tetris-bonus` which controls how valuable clearing four lines at once is to
+the agent. Adjust these flags to experiment with different behaviours.
 
 ## License
 

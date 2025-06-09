@@ -65,6 +65,6 @@ def test_tetris_bonus():
     env.current_id = 0
     env.pos = (0, 0)
     obs, reward, terminated, truncated, info = env.step(HARD_DROP)
-    assert reward == 40.0
+    assert reward == 80.0
     assert not terminated
     assert info["lines_cleared"] == 4
