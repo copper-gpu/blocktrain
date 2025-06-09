@@ -78,8 +78,12 @@ class TetrisEnv(gym.Env):
         if not moved:
             self._lock_piece()
             lines = self._clear_lines()
+            holes = self._count_holes()
             self._lines_total += lines
             reward = float(lines) * self.line_reward
+            if lines == 4:
+                reward *= 10
+            reward -= float(holes)
             terminated = not self._spawn_new_piece()
         else:
             reward, terminated = 0.0, False
@@ -139,3 +143,14 @@ class TetrisEnv(gym.Env):
                 [np.zeros((n, BOARD_WIDTH), dtype=np.int8), self.board[~full]]
             )
         return n
+
+    def _count_holes(self):
+        """Return the number of empty cells with at least one filled cell above."""
+        holes = 0
+        for c in range(BOARD_WIDTH):
+            column = self.board[:, c]
+            filled = np.flatnonzero(column)
+            if filled.size:
+                first = filled[0]
+                holes += int(np.sum(column[first:] == 0))
+        return holes

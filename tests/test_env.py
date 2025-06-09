@@ -55,3 +55,16 @@ def test_game_over_when_spawn_blocked():
     env.board[0:4, 3:7] = 1
     _, _, terminated, _, _ = env.step(HARD_DROP)
     assert terminated
+
+
+def test_tetris_bonus():
+    env = TetrisEnv(seed=0)
+    env.reset()
+    env.board[-4:, 1:] = 1
+    env.piece = np.rot90(PIECES[0]).copy()
+    env.current_id = 0
+    env.pos = (0, 0)
+    obs, reward, terminated, truncated, info = env.step(HARD_DROP)
+    assert reward == 40.0
+    assert not terminated
+    assert info["lines_cleared"] == 4
