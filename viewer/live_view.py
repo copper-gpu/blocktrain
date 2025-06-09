@@ -4,7 +4,7 @@ Real-time Pygame viewer for the TetrisEnv.
 Run:
 
     python viewer/live_view.py                 # random agent
-    python viewer/live_view.py --model <zip>   # play with trained PPO
+    python viewer/live_view.py --model <zip-or-dir>   # play with trained PPO
 
 Press ESC or close the window to quit.
 """
@@ -61,7 +61,22 @@ def draw_info(
 
 def play(model_path: Path | None = None) -> None:
     env = TetrisEnv()
-    model = PPO.load(model_path) if (model_path and PPO) else None
+    if model_path and PPO:
+        if model_path.is_dir():
+            ppo_zip = model_path / "ppo_tetris.zip"
+            if ppo_zip.exists():
+                model_path = ppo_zip
+            else:
+                zips = list(model_path.glob("*.zip"))
+                if len(zips) == 1:
+                    model_path = zips[0]
+                else:
+                    raise FileNotFoundError(
+                        f"No ppo_tetris.zip found in {model_path}; specify the path to the model .zip"
+                    )
+        model = PPO.load(model_path)
+    else:
+        model = None
 
     pygame.init()
     surface = pygame.display.set_mode(
