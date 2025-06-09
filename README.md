@@ -19,7 +19,7 @@ python -m scripts.train
 # evaluate a saved model
 python -m scripts.eval --model path/to/model.zip
 # or use the management CLI
-python -m scripts.manage train
+tetris-trainer train
 ```
 
 On Windows you can alternatively run the provided `quickstart_win.bat`
@@ -41,20 +41,29 @@ python -m viewer.live_view --model path/to/model.zip
 
 ## Management CLI
 
-Common tasks can also be run through a simple command line interface:
+Common tasks can also be run through a simple command line interface. When the
+project is installed (e.g. via `pip install -e .`), the `tetris-trainer` command
+provides direct access to these utilities. Running `tetris-trainer` without any
+arguments will show an interactive menu of available actions:
+
+```bash
+tetris-trainer
+```
+
+You can also call the subcommands directly:
 
 ```bash
 # create a virtual environment and install requirements
-python -m scripts.manage setup
+tetris-trainer setup
 
 # start a new training run
-python -m scripts.manage train --timesteps 200000
+tetris-trainer train --timesteps 200000
 
 # resume training from an existing model
-python -m scripts.manage resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000
+tetris-trainer resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000
 
 # launch TensorBoard to monitor progress
-python -m scripts.manage tensorboard
+tetris-trainer tensorboard
 ```
 
 When using the `-m` flag, give the module name with dots rather than a
