@@ -5,6 +5,7 @@ Train PPO on the custom Tetris environment for 150 000 steps.
 """
 from pathlib import Path
 
+import argparse
 import datetime as _dt
 
 from stable_baselines3 import PPO
@@ -16,8 +17,15 @@ LOG_ROOT.mkdir(parents=True, exist_ok=True)
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Train PPO on Tetris")
+    parser.add_argument("--timesteps", type=int, default=150_000)
+    parser.add_argument("--learning-rate", type=float, default=3e-4)
+    parser.add_argument("--gamma", type=float, default=0.99)
+    parser.add_argument("--line-reward", type=float, default=1.0)
+    args = parser.parse_args()
+
     # 1️⃣ create env
-    env = TetrisEnv()
+    env = TetrisEnv(line_reward=args.line_reward)
 
     # 2️⃣ logging dir
     ts = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -27,12 +35,14 @@ def main() -> None:
     model = PPO(
         policy="MultiInputPolicy",
         env=env,
+        learning_rate=args.learning_rate,
+        gamma=args.gamma,
         tensorboard_log=str(log_dir),
         verbose=1,
     )
 
     # 4️⃣ learn
-    model.learn(total_timesteps=150_000, progress_bar=True)
+    model.learn(total_timesteps=args.timesteps, progress_bar=True)
 
     # 5️⃣ save
     model_path = log_dir / "ppo_tetris.zip"

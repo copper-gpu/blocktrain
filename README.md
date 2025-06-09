@@ -15,7 +15,7 @@ pip install -r requirements.txt
 # requirements include stable-baselines3 extras and tensorboard for training logs
 pytest
 # train an agent
-python -m scripts.train
+python -m scripts.train --timesteps 200000 --line-reward 2.0
 # evaluate a saved model
 python -m scripts.eval --model path/to/model.zip
 # or use the management CLI
@@ -57,14 +57,19 @@ You can also call the subcommands directly:
 tetris-trainer setup
 
 # start a new training run
-tetris-trainer train --timesteps 200000
+tetris-trainer train --timesteps 200000 --line-reward 2.0
 
 # resume training from an existing model
-tetris-trainer resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000
+tetris-trainer resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000 --line-reward 2.0
 
 # launch TensorBoard to monitor progress
 tetris-trainer tensorboard
 ```
+
+Both the training script and CLI expose common PPO parameters such as
+`--learning-rate`, `--gamma` and a custom `--line-reward` that controls how
+valuable clearing a line is to the agent. Adjust these flags to experiment with
+different behaviours.
 
 When using the `-m` flag, give the module name with dots rather than a
 filesystem path. For instance run `python -m viewer.live_view`, not
