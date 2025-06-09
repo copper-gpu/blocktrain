@@ -18,6 +18,8 @@ pytest
 python -m scripts.train
 # evaluate a saved model
 python -m scripts.eval --model path/to/model.zip
+# or use the management CLI
+python -m scripts.manage train
 ```
 
 On Windows you can alternatively run the provided `quickstart_win.bat`
@@ -35,6 +37,24 @@ scripts:
 ```bash
 python -m scripts.eval --model path/to/model.zip
 python -m viewer.live_view --model path/to/model.zip
+```
+
+## Management CLI
+
+Common tasks can also be run through a simple command line interface:
+
+```bash
+# create a virtual environment and install requirements
+python -m scripts.manage setup
+
+# start a new training run
+python -m scripts.manage train --timesteps 200000
+
+# resume training from an existing model
+python -m scripts.manage resume --model logs/tb/20240101-120000/ppo_tetris.zip --timesteps 50000
+
+# launch TensorBoard to monitor progress
+python -m scripts.manage tensorboard
 ```
 
 When using the `-m` flag, give the module name with dots rather than a
